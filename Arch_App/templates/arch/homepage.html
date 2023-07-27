@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>home page</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/table.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">ROCA Archive</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+            </ul>
+            <form  action="/logOut" class="d-flex">
+              <button class="btn btn-outline-success" type="submit">log-out</button>
+            </form>
+          </div>
+        </div>
+    </nav>
+    
+    <div class="table-container" style="color: black;">
+      <a href="{% url 'departementDetails' 'Informatique' %}" class="folder-icon" style="text-decoration-line:none ;" name="info">
+        <i class="fas fa-folder"></i>
+        <span>Informatique</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Achats' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>achats</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Import' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>import</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Back-Office' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>Back-Office</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Finance' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>Finance</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Ressources Humaines' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>Resources Humaines</span>
+      </a>
+      <a href="{% url 'departementDetails' 'Marketing' %}" class="folder-icon" style="text-decoration-line:none ;">
+        <i class="fas fa-folder"></i>
+        <span>Marketing</span>
+      </a>
+    </div>
+
+    <div class="table2">
+      <table>
+        <tr>
+          <th class="checkbox-col"><input type="checkbox"></th>
+          <th class="folder-col">Type</th>
+          <th class="name-col">Nom</th>
+          <th class="item-col">Items</th>
+          <th class="date-col">modification</th>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Informatique</td>
+          <td>10</td>
+          <td>2023-07-15</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Achats</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Import</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Back-Office</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Finance</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Ressources Humaines</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td class="folder-icon2">
+            <i class="fas fa-folder"></i>
+          </td>
+          <td>Marketing</td>
+          <td>5</td>
+          <td>2023-07-12</td>
+        </tr>
+
+      </table>
+    </div>
+  </body>
+</html>

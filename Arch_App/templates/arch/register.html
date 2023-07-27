@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface d'Enregistrement</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .register-container {
+            width: 300px;
+            padding: 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .register-container input[type="text"],
+        .register-container input[type="email"],
+        .register-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .register-container button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #000000;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .register-container p {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .register-container p a {
+            color: #5858f9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>ROCA Archive</h2>
+        <form action="{% url 'register' %}" method="POST">
+          {% csrf_token %}
+            <input type="text" placeholder="Nom" name="Firstname">
+            <input type="text" placeholder="Prénom" name="Lastname">
+            <input type="email" placeholder="Adresse e-mail" name="email">
+            <input type="password" placeholder="Mot de passe" name="password">
+            <button type="submit">S'enregistrer</button>
+        </form>
+        <p>Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a></p>
+    </div>
+</body>
+</html>
+

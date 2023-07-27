@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>login</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .login-container {
+      width: 300px;
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    
+    .login-container h2 {
+      text-align: left;
+    }
+    
+    .login-container input[type="email"],
+    .login-container input[type="password"]{
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    .login-container button.submit1{
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #050805;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .login-container label.checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .login-container label.checkbox input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>ROCA Archive</h2>
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <input type="email" name="email" placeholder="adresse mail" required>
+      <input type="password" name="password" placeholder="Mot de passe" required>
+      <label class="checkbox">
+        <input type="checkbox" name="remember">
+        <span>Se souvenir de moi</span>
+      </label>
+      <button type="submit" class="submit1">Se connecter</button>
+    </form>
+    <p>Vous n'avez pas de compte ? <a href="{% url 'register' %}">S'enregistrer</a></p>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+  </div>
+</body>
+</html>

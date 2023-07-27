@@ -1,0 +1,44 @@
+{% extends "departement/base.html" %}
+
+    {% block content %}
+      <h3 style="padding: 5px;margin: 20px;"><i class="fas fa-folder"> </i> {{ nom }} </h3>
+    {% endblock %}
+
+    <div class="table2">
+      {% block body %}
+        <table>
+          <tr>
+            <th class="checkbox-col"><input type="checkbox"></th>
+            <th class="folder-col">Type</th>
+            <th class="name-col">Nom</th>
+            <th class="item-col">size</th>
+            <th class="date-col">modification</th>
+          </tr>
+        {% for dossier in dossiers %}
+          <tr>
+            <td class="checkbox-col">
+              <input id="checkBox_Dossier{{dossier.id}}" type="checkbox">
+            </td>
+
+            <td class="folder-icon">
+              {% if dossier.get_class == 'dossier' %}
+                <i class="fas fa-folder"></i>
+              {% else %}
+                <i class="fas fa-file"></i>
+              {% endif %}
+            </td>
+            <td >
+              {% if dossier.get_class == 'dossier' %}
+                <a href="/details/{{ dossier.id }}">{{dossier.nom}}</a>
+              {% else %}
+                <a href="/details_file/{{ dossier.id }}">{{dossier.nom}}</a>
+              {% endif %}
+            </td>
+            <td>{{dossier.size}}</td>
+            <td>{{dossier.modification}}</td>
+          </tr>
+        {% endfor %}
+        {% endblock %}
+          
+        </table>
+      </div>
