@@ -11,6 +11,8 @@ class Departement(models.Model):
 
     def __str__(self):
         return self.nom
+    def formatted_date(self):
+        return self.modification.strftime('%Y-%m-%d')
 
 class User(models.Model):
     username = models.CharField(max_length=100)
@@ -46,3 +48,10 @@ class Fichier(models.Model):
         return self.nom
     
     get_class = 'fichier'
+
+class Log(models.Model):
+    nature      = models.CharField(max_length=100)
+    # [created-deleted-updated-printed]
+    nom = models.CharField(max_length=100)
+    size = models.IntegerField(default=0)
+    modification = models.DateField(auto_now=True)

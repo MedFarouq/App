@@ -9,6 +9,7 @@ urlpatterns = [
     path('homepage/',views.homepage,name='homepage'),
     path('details/<dossier>',views.details,name='details'),
     path('details_file/<fichier>',views.detailsFile,name='detailsFile'),
+    path('delete_dossiers/', views.delete_dossiers, name='delete_dossiers'),
     path('<str:nom_departement>/', views.departementDetails, name='departementDetails'),
 
 ]

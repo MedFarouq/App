@@ -6,7 +6,7 @@ import time
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
-from Arch_App.models import Departement, Dossier, Fichier
+from Arch_App.models import Departement, Dossier, Fichier,Log
 
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
@@ -29,7 +29,7 @@ def move_pdf_to_subfolder(pdf_file, target_subfolder):
     os.rename(pdf_file, new_file_path)
 
     element = target_subfolder.split("\\")
-    id = Fichier.objects.order_by('-id').first().id+1
+    id = Fichier.objects.order_by('-id').first()
 
     departement_id = Departement.objects.filter(nom=element[-2]).first().id
     print(departement_id)
@@ -47,9 +47,13 @@ def move_pdf_to_subfolder(pdf_file, target_subfolder):
         dossier = Dossier(dbId,element[-1],size,departement_id=departement_id)
     dossier.save()
     dossier_id = dossier.id
-
+    
     file = Fichier(id,os.path.basename(new_file_path),new_file_path,size,dossier_id=dossier_id)
     file.save()
+    log = Log()
+    log.nature = "creation"
+    log.size = size
+    log.save()
     print(f"Fichier déplacé vers : {target_subfolder}")
 
 
@@ -100,7 +104,7 @@ if __name__ == "__main__":
             'sous-dossier8': ['mot_cle11', 'mot_cle12']
         },
         'Ressources Humaines': {
-            'sous-dossier9': ['mot_cle13', 'mot_cle14']
+            '00 - Demande de congé ': ['demande de depart en conge ']
         },
         'Marketing': {
             'sous-dossier10': ['mot_cle15']

@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/table.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
 </head>
 
 <body>
@@ -22,8 +25,8 @@
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
             </ul>
-            <form  action="/logOut" class="d-flex">
-              <button class="btn btn-outline-success" type="submit">log-out</button>
+            <form class="w-100" action="/logOut">
+              <button class="btn btn-outline-danger float-right" type="submit">Log-out</button>
             </form>
           </div>
         </div>
@@ -61,93 +64,31 @@
     </div>
 
     <div class="table2">
-      <table>
-        <tr>
-          <th class="checkbox-col"><input type="checkbox"></th>
-          <th class="folder-col">Type</th>
-          <th class="name-col">Nom</th>
-          <th class="item-col">Items</th>
-          <th class="date-col">modification</th>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Informatique</td>
-          <td>10</td>
-          <td>2023-07-15</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Achats</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Import</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Back-Office</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Finance</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Ressources Humaines</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
-        <tr>
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td class="folder-icon2">
-            <i class="fas fa-folder"></i>
-          </td>
-          <td>Marketing</td>
-          <td>5</td>
-          <td>2023-07-12</td>
-        </tr>
 
-      </table>
+      <div class="w-100 m-10 p-10" style="padding-left:120px;padding-right:120px">
+        <table class="w-100">
+          <tr>
+            <th class="folder-col"> Type          </th>
+            <th class="folder-col"> Nom          </th>
+            <th class="folder-col"> Action        </th>
+            <th class="item-col">   Size          </th>
+            <th class="date-col">   modification  </th>
+          </tr>
+          {% for log in logs %}
+          <tr>
+            <td class="folder-icon2">
+              <i class="fas fa-file"></i>
+            </td>
+            <td>{{log.nom}}</td>
+            <td>{{log.nature}}</td>
+            <td>{{log.size}}</td>
+            <td>{{log.modification}}</td>
+          </tr>
+          {% endfor %}
+
+        </table>
+      </div>
+
     </div>
   </body>
 </html>

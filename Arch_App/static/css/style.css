@@ -3,11 +3,6 @@ body {
     padding: 0;
   }
   
-  .navbar {
-    background-color: #9b9898;
-    padding: 2%;
-  }
-  
   .table-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr); 

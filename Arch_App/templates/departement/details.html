@@ -1,14 +1,21 @@
 {% extends "departement/base.html" %}
 
-    {% block content %}
-      <h3 style="padding: 5px;margin: 20px;"><i class="fas fa-folder"> </i> {{ nom }} </h3>
-    {% endblock %}
+{% block content %}
+    <h3 style="padding: 5px;margin: 20px;"><i class="fas fa-folder"> </i> {{ nom }} </h3>
+{% endblock %}
 
-    <div class="table2">
-      {% block body %}
-        <table>
+{% block body %}
+
+    <div class="w-100 m-10 p-10" style="padding-left:120px;padding-right:120px">
+        <div class="mb-2">
+          {% csrf_token %}
+          <button id="delete-btn" class="btn btn-outline-danger btn-sm">
+            Supprimer
+          </button>
+        </div>
+        <table class="w-100">
           <tr>
-            <th class="checkbox-col"><input type="checkbox"></th>
+            <th class="checkbox-col" ><input type="checkbox" id="select-all"></th>
             <th class="folder-col">Type</th>
             <th class="name-col">Nom</th>
             <th class="item-col">size</th>
@@ -17,7 +24,11 @@
         {% for dossier in dossiers %}
           <tr>
             <td class="checkbox-col">
-              <input id="checkBox_Dossier{{dossier.id}}" type="checkbox">
+              {% if dossier.get_class == 'dossier' %}
+                <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="true" type="checkbox">
+              {% else %}
+                <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="false" type="checkbox">
+              {% endif %}
             </td>
 
             <td class="folder-icon">
@@ -38,7 +49,43 @@
             <td>{{dossier.modification}}</td>
           </tr>
         {% endfor %}
-        {% endblock %}
           
         </table>
       </div>
+
+
+      <script>
+
+          $("#select-all").on("change",function () {
+            $(".checkBox_Dossier").prop("checked", $("#select-all")[0].checked);
+          });
+
+          $("#delete-btn").on("click",function () {
+            var selectedIds = [];
+            $(".checkBox_Dossier:checked").each(function () {
+              selectedIds.push({
+                  id: $(this).data("dossier_id") ,
+                  type: $(this).data("is_dossier") ,
+                }
+              );
+            });
+
+            $.ajax({
+              url: "/delete_dossiers/",
+              type: "POST",
+              data: {
+                'ids':JSON.stringify(selectedIds),
+                'csrfmiddlewaretoken': "{{ csrf_token }}"
+              },
+              dataType: 'json',
+              success: function (response) {
+                location.reload();
+              },
+              error: function (xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+              },
+            });
+          });
+
+        </script>
+{% endblock %}

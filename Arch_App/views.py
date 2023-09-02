@@ -5,7 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login as loginDjango
 from django.contrib.auth import logout
-from .models import Dossier, Fichier
+from .models import Dossier, Fichier,Log
+from django.http import JsonResponse
+import json
 
 
 
@@ -34,11 +36,8 @@ def register(request):
           username = request.POST['Firstname'] + request.POST['Lastname']
           email = request.POST['email']
           password = request.POST['password']
-          # Valider les données si nécessaire
-          # Sauvegarder l'utilisateur dans la base de données
           user = User(username=username, password=password, email=email)
           user.save()
-          # Rediriger l'utilisateur vers la page de connexion après l'inscription
           return redirect('login')
     return render(request, 'arch/register.html')
   else :
@@ -47,7 +46,8 @@ def register(request):
 def homepage(request):
   if str(request.user) == 'AnonymousUser':
     return redirect('login')
-  return render(request, 'arch/homepage.html')
+  logs = Log.objects.all()
+  return render(request, 'arch/homepage.html',{'logs': logs})
   
 
 def loginAtempt(request):
@@ -90,3 +90,28 @@ def detailsFile(request, fichier):
           response = HttpResponse(pdf.read(), content_type='application/pdf')
           response['Content-Disposition'] = f"inline;filename={fichier.nom}"
           return response
+
+
+def delete_dossiers(request):
+    if request.method == 'POST' :
+
+        ids = json.loads(request.POST.get('ids'))
+
+        try:
+            for dossier in ids :
+
+              if  dossier["type"] == 'True': # is dossier
+                continue
+              else:
+                fichier = Fichier.objects.filter(pk=dossier["id"]).first()
+                if os.path.isfile(fichier.chemin):
+                  os.remove(fichier.chemin)
+                fichier.delete()
+
+            return JsonResponse({'message': 'Le dossier a été supprimé avec succès.'})
+        except Dossier.DoesNotExist:
+            # Si le dossier n'existe pas, renvoyer une réponse JSON avec un message d'erreur
+            return JsonResponse({'message': 'Le dossier n\'existe pas.'}, status=400)
+    else:
+        # Rediriger l'utilisateur vers la page d'accueil en cas de requête invalide
+        return redirect('homepage')
