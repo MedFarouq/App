@@ -30,4 +30,6 @@ body {
     line-height: 1.2; 
   }
 
-  
+  button:disabled{
+    cursor: not-allowed;
+  }

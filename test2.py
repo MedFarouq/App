@@ -51,8 +51,9 @@ def move_pdf_to_subfolder(pdf_file, target_subfolder):
     file = Fichier(id,os.path.basename(new_file_path),new_file_path,size,dossier_id=dossier_id)
     file.save()
     log = Log()
-    log.nature = "creation"
-    log.size = size
+    log.nature  = "creation"
+    log.size    = size
+    log.nom     = new_file_path.split("\\")[-1]
     log.save()
     print(f"Fichier déplacé vers : {target_subfolder}")
 

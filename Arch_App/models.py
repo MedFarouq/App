@@ -41,7 +41,7 @@ class Fichier(models.Model):
     nom = models.CharField(max_length=100)
     chemin = models.CharField(max_length=200)
     size = models.IntegerField(default=0)
-    modification = models.DateField(auto_now=True)
+    modification = models.DateTimeField(auto_now=True)
     dossier = models.ForeignKey(Dossier, on_delete=models.CASCADE)
     def __str__(self):
         
@@ -54,4 +54,4 @@ class Log(models.Model):
     # [created-deleted-updated-printed]
     nom = models.CharField(max_length=100)
     size = models.IntegerField(default=0)
-    modification = models.DateField(auto_now=True)
+    modification = models.DateTimeField(auto_now=True)

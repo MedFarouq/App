@@ -5,60 +5,142 @@
 {% endblock %}
 
 {% block body %}
-
+<style>
+  .dt-button-info {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    border: 1px black solid;
+    padding: 10px;
+  }
+</style>
     <div class="w-100 m-10 p-10" style="padding-left:120px;padding-right:120px">
         <div class="mb-2">
           {% csrf_token %}
-          <button id="delete-btn" class="btn btn-outline-danger btn-sm">
-            Supprimer
-          </button>
         </div>
-        <table class="w-100">
-          <tr>
-            <th class="checkbox-col" ><input type="checkbox" id="select-all"></th>
-            <th class="folder-col">Type</th>
-            <th class="name-col">Nom</th>
-            <th class="item-col">size</th>
-            <th class="date-col">modification</th>
-          </tr>
-        {% for dossier in dossiers %}
-          <tr>
-            <td class="checkbox-col">
-              {% if dossier.get_class == 'dossier' %}
-                <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="true" type="checkbox">
-              {% else %}
-                <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="false" type="checkbox">
-              {% endif %}
-            </td>
-
-            <td class="folder-icon">
-              {% if dossier.get_class == 'dossier' %}
-                <i class="fas fa-folder"></i>
-              {% else %}
-                <i class="fas fa-file"></i>
-              {% endif %}
-            </td>
-            <td >
-              {% if dossier.get_class == 'dossier' %}
-                <a href="/details/{{ dossier.id }}">{{dossier.nom}}</a>
-              {% else %}
-                <a href="/details_file/{{ dossier.id }}">{{dossier.nom}}</a>
-              {% endif %}
-            </td>
-            <td>{{dossier.size}}</td>
-            <td>{{dossier.modification}}</td>
-          </tr>
-        {% endfor %}
-          
+        <input type="file"  id="file-upload" style="display: none;" />
+        <table class="table table-bordered table-stripped table-sm" id="mainTable" style="line-height:11px">
+          <thead>
+            <tr>
+              <th class="checkbox-col" ><input type="checkbox" id="select-all"></th>
+              <th class="folder-col">Type</th>
+              <th class="name-col">Nom</th>
+              <th class="item-col">size</th>
+              <th class="date-col" style="width: 1%;">modification</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dossier in dossiers %}
+              <tr>
+                <td class="checkbox-col">
+                  {% if dossier.get_class == 'dossier' %}
+                    <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="true" type="checkbox">
+                  {% else %}
+                    <input class="checkBox_Dossier" id="checkBox_Dossier{{dossier.id}}" data-dossier_id="{{dossier.id}}" data-is_dossier="false" type="checkbox">
+                  {% endif %}
+                </td>
+    
+                <td class="folder-icon">
+                  {% if dossier.get_class == 'dossier' %}
+                    <i class="fas fa-folder"></i>
+                    <span style="opacity: 0 ;font-size: 0px;">Dossier</span>
+                  {% else %}
+                    <i class="fas fa-file"></i>
+                    <span style="opacity: 0 ;font-size: 0px;">Fichier</span>
+                  {% endif %}
+                </td>
+                <td >
+                  {% if dossier.get_class == 'dossier' %}
+                    <a href="/details/{{ dossier.id }}">{{dossier.nom}}</a>
+                  {% else %}
+                    <a href="/details_file/{{ dossier.id }}">{{dossier.nom}}</a>
+                  {% endif %}
+                </td>
+                <td>{{dossier.size}}</td>
+                <td style="width:20% ">{{dossier.modification}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
         </table>
       </div>
 
 
       <script>
+          var dt  = $('#mainTable').DataTable( {
+            dom: 'Blfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5',
+                {
+                  text: 'Supprimer',
+                  action: function() {
+
+                  },
+                  className: 'btn btn-outline-secondary btn-sm',
+                },
+                {
+                  text: 'Ajouter',
+                  action: function() {
+
+                  },
+                  className: 'btn btn-outline-secondary btn-sm',
+                },
+            ],
+          } );
+          /*dt.buttons.exportData = function(data) {
+            // Strip the HTML tags from the data.
+            data[0].forEach(function(row) {
+              row[1] = row[1].replace(/(<([^>]+)>)/ig, '');
+            });
+
+            return data;
+          };
+          */
+          $('.dt-buttons button:contains("Ajouter")').attr('id', 'add-btn');
+          $('.dt-buttons button:contains("Supprimer")').attr('id', 'delete-btn');
+          $('.dt-buttons button:not(#delete-btn)').addClass('btn btn-outline-secondary btn-sm');
+          $('#mainTable_length').addClass('pt-2');
+          /*$('#mainTable').DataTable({
+            buttons: [
+              'copy',
+              'excel',
+              'csv',
+              'pdf',
+              {
+                text: 'Export to JSON',
+                action: function() {
+                  // Export the table to a JSON file.
+                },
+                className: 'btn btn-primary',
+              },
+            ],
+          } );**/
+
 
           $("#select-all").on("change",function () {
             $(".checkBox_Dossier").prop("checked", $("#select-all")[0].checked);
           });
+
+          $(".checkBox_Dossier , #select-all").on("change",function () {
+            var cancelSuppression = false ;
+            for (const checkbox of $(".checkBox_Dossier")) {
+              if($(checkbox).data('is_dossier') && $(checkbox)[0].checked ){
+                cancelSuppression = true ;
+              }
+            }
+
+            if(cancelSuppression){
+              $("#delete-btn")[0].disabled = true ;
+              $("#add-btn")[0].disabled = true ;
+            }else{
+              $("#delete-btn")[0].disabled = false ;
+              $("#add-btn")[0].disabled = false ;
+            }
+          });
+
 
           $("#delete-btn").on("click",function () {
             var selectedIds = [];
@@ -87,5 +169,38 @@
             });
           });
 
-        </script>
+          $("#add-btn").on("click",function () {
+            $("#file-upload").trigger('click');
+          });
+          
+          $("#file-upload").on('change',()=>{
+            if($('#file-upload').val() != ''){
+
+              var fd = new FormData();
+              
+              fd.append('csrfmiddlewaretoken',"{{ csrf_token }}");
+              fd.append('dossier_id',"{{ dossier_id }}");
+              fd.append('file', $('#file-upload').prop('files')[0]);
+
+              $.ajax({
+                url: "/add_dossiers/",
+                type: "POST",
+                data:fd,          
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                  location.reload();
+                },
+                error: function (xhr, errmsg, err) {
+                  console.log(xhr.status + ": " + xhr.responseText);
+                },
+                complete:function(){
+                  $('#file-upload').val('');
+                }
+              });
+            }
+          });
+
+
+          </script>
 {% endblock %}

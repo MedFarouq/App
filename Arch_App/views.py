@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login as loginDjango
 from django.contrib.auth import logout
-from .models import Dossier, Fichier,Log
+from .models import Dossier, Fichier,Log ,Departement
 from django.http import JsonResponse
 import json
 
@@ -46,7 +46,7 @@ def register(request):
 def homepage(request):
   if str(request.user) == 'AnonymousUser':
     return redirect('login')
-  logs = Log.objects.all()
+  logs = Log.objects.all().order_by('-modification')
   return render(request, 'arch/homepage.html',{'logs': logs})
   
 
@@ -64,7 +64,7 @@ def details(request, dossier):
   if str(request.user) == 'AnonymousUser':
     return redirect('login')
   dossier = Dossier.objects.filter(pk=dossier).first()
-  return render(request, 'departement/details.html', {'dossiers': dossier.fichier_set.all(), 'nom': dossier.nom})
+  return render(request, 'departement/details.html', {'dossiers': dossier.fichier_set.all(), 'nom': dossier.nom ,'dossier_id': dossier.id})
   
 def departementDetails(request, nom_departement):
   if str(request.user) == 'AnonymousUser':
@@ -104,6 +104,11 @@ def delete_dossiers(request):
                 continue
               else:
                 fichier = Fichier.objects.filter(pk=dossier["id"]).first()
+                log = Log()
+                log.nature  = "suppression"
+                log.size    = fichier.size
+                log.nom     = fichier.nom
+                log.save()
                 if os.path.isfile(fichier.chemin):
                   os.remove(fichier.chemin)
                 fichier.delete()
@@ -112,6 +117,42 @@ def delete_dossiers(request):
         except Dossier.DoesNotExist:
             # Si le dossier n'existe pas, renvoyer une réponse JSON avec un message d'erreur
             return JsonResponse({'message': 'Le dossier n\'existe pas.'}, status=400)
+    else:
+        # Rediriger l'utilisateur vers la page d'accueil en cas de requête invalide
+        return redirect('homepage')
+
+def add_dossiers(request):
+    if request.method == 'POST' :
+
+      dossier = Dossier.objects.get(id=request.POST.get('dossier_id'))
+      departement = Departement.objects.get(id=dossier.departement_id)
+
+      new_file_path = 'C:\\Users\\FAROUQ\\Desktop\\scan\\'+departement.nom+'\\'+dossier.nom+'\\' + request.FILES['file'].name
+
+      uploaded_file = request.FILES['file']
+
+      # Open a file object in write mode.
+      with open(new_file_path, 'wb') as f:
+          # Write the contents of the uploaded file object to the file object.
+          for chunk in uploaded_file.chunks():
+              f.write(chunk)
+
+      id = Fichier.objects.order_by('-id').first().id + 1
+
+      pdf_file = open(new_file_path, "rb")
+      pdf_file.seek(0,os.SEEK_END)
+      size = pdf_file.tell()
+
+      file = Fichier(id,os.path.basename(new_file_path),new_file_path,size,dossier_id=dossier.id)
+      file.save()
+      log = Log()
+      log.nature  = "creation"
+      log.size    = size
+      log.nom     = new_file_path.split("\\")[-1]
+      log.save()
+
+      return JsonResponse({'message': 'Le fichier a été créé avec succès.'})
+
     else:
         # Rediriger l'utilisateur vers la page d'accueil en cas de requête invalide
         return redirect('homepage')
